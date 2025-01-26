@@ -12,8 +12,29 @@
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h5 class="card-title">{{ product.name }}</h5>
-              <p class="card-text">₹ {{ product.price }}</p>
+           
+
+              {% if product.is_sale %}
+              <div class="card-body p-4">
+                <div class="text-left">
+                    <!-- Product name-->
+                    <h5 class="fw-bolder">{{product.name}}</h5>
+                    <!-- Product price-->
+                    <strike>
+                        ₹ {{product.price}}
+                    </strike> 
+                    &nbsp;
+                    ₹ {{product.sale_price}}
+                    <br/>
+                    <font style="color: rgb(31, 9, 174);">{{ product.category }}</font> 
+                </div>
+            </div>
+
+              {% else %}
+                ₹ {{ product.price }}
+              {% endif %}
+              <p class="card-text"> {{ product.description }}</p>
+
               <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
              
             </div>
