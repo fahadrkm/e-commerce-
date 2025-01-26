@@ -2,7 +2,7 @@ from django.db import models
 import datetime
 
 #cat of prdouct
-class category(models.Model):
+class Category(models.Model):
     name=models.CharField(max_length=100)
     def __str__(self):
         return self.name
@@ -29,7 +29,7 @@ class customer(models.Model):
 class Product(models.Model):
     name=models.CharField(max_length=100)
     price=models.DecimalField(default=0,decimal_places=2,max_digits=7)
-    category=models.ForeignKey(category,on_delete=models.CASCADE,default=1)
+    Category=models.ForeignKey(Category,on_delete=models.CASCADE,default=1)
     description=models.CharField(max_length=250,default='',null=True)
     image=models.ImageField(upload_to='uploads/product/')
     #add sales
