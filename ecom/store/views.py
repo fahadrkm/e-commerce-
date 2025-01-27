@@ -8,16 +8,16 @@ from.forms import SignUpForm
 from django import forms
 
 def category(request, foo):
-    foo=foo.replace('-',' ') #replace hyphens with space
+    foo = foo.replace('-', ' ')  # Replace hyphens with spaces
     try:
-        category = Category.objects.get(name=foo)
-        products =Product.objects.filter(category=category)
-        return render(request, 'category.html', {'products':products, 'category':category})
+        category = Category.objects.get(name__iexact=foo)  # Case-insensitive lookup for category name
+        products = Product.objects.filter(Category=category)  # Match the field name "Category"
+        return render(request, 'category.html', {'products': products, 'category': category.name})
+    except Category.DoesNotExist:
+        messages.error(request, "That category doesn't exist.")
+        return redirect('home')
 
 
-    except:
-        messages.success(request, ("that category doesnt exist"))
-        return redirect ('home')
 
 
 def product(request,pk):
