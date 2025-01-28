@@ -32,6 +32,7 @@
 
               {% else %}
                 ₹ {{ product.price }}
+                <br/> ID : {{ product.id }}
               {% endif %}
               <p class="card-text"> {{ product.description }}</p>
 
@@ -44,10 +45,41 @@
       <br/>
 
       <center>
-        <a href="{% url 'home' %}" class="btn btn-primary">Home</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
+        <button type="button" value="{{ product.id }}" class= "btn btn-primary" id="add-cart">Add to cart</button>
       </center>
       <br/>
 </div>
 
+
+
+
+<script>
+    //check if button pressed
+$(document).on('click', '#add-cart', function(e){
+    e.preventDefault();
+    $.ajax({
+        type:'POST',
+        url: '{% url "cart_add" %}',
+        data:{
+            product_id: $('#add-cart').val(),
+            csrfmiddlewaretoken : '{{ csrf_token }}',
+            action: 'post'
+        },
+
+        success:function(json){
+            console.log(json)
+        },
+
+        error: function(xhr,errmsg ,err){
+
+        }
+
+    });
+   
+})
+
+
+</script>
 
 {% endblock %}
