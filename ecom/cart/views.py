@@ -1,7 +1,8 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from .cart import Cart
 from store.models import Product
 from django.http import JsonResponse
+from django.contrib import messages
 
 def cart_summary(request):
     return render(request,"cart_summary.html",{})
@@ -9,7 +10,7 @@ def cart_summary(request):
 
 def cart_add(request):
     #get the cart
-    cart = cart(request)
+    cart = Cart(request)
     #test for POST
     if request.POST.get('action')=='post':
         # get stuff
@@ -19,7 +20,7 @@ def cart_add(request):
         #save to session
         cart.add(product=product)
         #return response
-        response = JsonResponse({'Product Name':product.name})
+        response = JsonResponse({'Product Name:':product.name})
         return response
 
 
