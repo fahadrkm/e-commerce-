@@ -37,7 +37,21 @@
               <p class="card-text"> {{ product.description }}</p>
 
               <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-             
+             <br/><br/>
+                <div class="row justify-content-center">
+                    <div class="col-md-2"> Quantity:</div>
+                    <div class="col-md-2">
+                        <select class="form-select form-select-sm" id="qty-cart">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+
+
             </div>
           </div>
         </div>
@@ -60,6 +74,7 @@
     url: '{% url "cart_add" %}', 
     data: { 
     product_id: $('#add-cart').val(), 
+    product_qty:$('#qty-cart option:selected').text(),
     csrfmiddlewaretoken: '{{ csrf_token }}', 
     action: 'post' 
     }, 
