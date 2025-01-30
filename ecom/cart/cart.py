@@ -1,4 +1,5 @@
 # for session 
+from store.models import Product
 class Cart():
     def __init__(self, request):
         self.session = request.session
@@ -18,7 +19,7 @@ class Cart():
 
         
     def add(self,product):
-        product_id =str(product.id)
+        product_id = str(product.id)
         #logic
         if product_id in self.cart:
             pass
@@ -26,5 +27,19 @@ class Cart():
             self.cart[product_id]={'price': str(product.price)}
 
         self.session.modified = True
+    
+    def __len__(self):
+        return len(self.cart)
+    
+    def get_prods(self):
+        #getids fromcart
+        product_ids = self.cart.keys()
+        #use id to look up product in db
+        products= Product.objects.filter(id__in=product_ids)
         
+        #return to those looked up products
+        return products
+
+    
+
 
