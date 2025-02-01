@@ -74,6 +74,9 @@
                                 <option value="4">4</option>
                                 <option value="5">5</option>
                             </select>
+                            <br/>
+                            <button type="button" data-index="{{product.id}}"
+            class="btn btn-secondary update-cart">Update</button>
                         </div>
                     </div>
 
@@ -93,8 +96,7 @@
         </div><br/>
         <center>
             <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
-            <button type="button" data-index="{{product.id}}"
-            class="btn btn-primary update-cart">Update</button>
+            
         </center>
 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
@@ -102,16 +104,17 @@
 
 <script>
 
-    $(document).on('click', 'update-cart', function(e){ 
+    $(document).on('click', '.update-cart', function(e){ 
         e.preventDefault(); 
         //grab product id
         var productid = $(this).data('index');
+
         $.ajax({ 
         type: 'POST', 
         url: '{% url "cart_update" %}', 
         data: { 
         product_id: $(this).data('index'), 
-        product_qty:$('#select' + productid + 'option:selected' ).text(),
+        product_qty: $('#select' + productid + 'option:selected' ).text(),
         csrfmiddlewaretoken: '{{ csrf_token }}', 
         action: 'post' 
         }, 
