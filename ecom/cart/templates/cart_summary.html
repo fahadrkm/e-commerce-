@@ -62,7 +62,7 @@
                                 
                                     {% for key, value in quantities.items %}
                                         {%if key == product.id|slugify %}
-                                            <option selected>{{ value }} </option>
+                                            <option selected>{{value}} </option>
                                         {% endif %}
                                     {% endfor %}
                                 
@@ -77,6 +77,10 @@
                             <br/>
                             <button type="button" data-index="{{product.id}}"
             class="btn btn-secondary update-cart">Update</button>
+            &nbsp;
+            <button type="button" data-index="{{product.id}}"
+            class="btn btn-danger delete-product">Remove</button>
+            
                         </div>
                     </div>
 
@@ -131,6 +135,37 @@
         });
     
     })
+
+    
+    $(document).on('click', '.delete-product', function(e){ 
+        e.preventDefault(); 
+        //grab product id
+        //var productid = $(this).data('index');
+
+        $.ajax({ 
+        type: 'POST', 
+        url: '{% url "cart_delete" %}', 
+        data: { 
+        product_id: $(this).data('index'), 
+        //product_qty: $('#select' + productid + 'option:selected' ).text(),
+        csrfmiddlewaretoken: '{{ csrf_token }}', 
+        action: 'post' 
+        }, 
+        success: function(json){ 
+        //console.log(json) 
+        //document.getElementById("cart_quantity").
+            //textContent = json.qty
+            location.reload();
+
+
+        }, 
+        error: function(xhr, errmsg, err){ 
+        } 
+        });
+    
+    })
+
+
 
 </script>
 
