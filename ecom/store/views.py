@@ -4,11 +4,21 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from.forms import SignUpForm, UpdateUserForm
+from.forms import SignUpForm, UpdateUserForm,ChangePasswordForm
 from django import forms
 
 def update_password(request):
-     return render(request,"update_password.html",{})
+    if request.user.is_authenticated:
+          current_user=request.user
+          if request.method == 'POST':
+               #do stuff
+               pass
+          else:
+               form =ChangePasswordForm(current_user)
+               return render(request,"update_password.html",{})
+    else:
+        messages.success(request, "User Has Been Updated!!")
+        return redirect('home')
 
 def update_user(request):
 	if request.user.is_authenticated:
