@@ -1,5 +1,26 @@
 from django.db import models
 import datetime
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+
+#create customer profile
+class Profile(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    date_modified = models.DateTimeField(User,auto_now=True)
+    phone = models.CharField(max_length=15,blank=True)
+    address1 = models.CharField(max_length=200,blank=True)
+    address2 = models.CharField(max_length=200,blank=True)
+    city = models.CharField(max_length=200,blank=True)
+    state = models.CharField(max_length=200,blank=True)
+    pincode = models.CharField(max_length=200,blank=True)
+    country = models.CharField(max_length=200,blank=True)
+
+def create_profile(sender,instsance,created.**kwargs):
+    if created:
+        user_profile =Profile(user=instsance)
+        user_profile.save()
+post_save.connect(create_profile,sender=User)
+        
 
 #cat of prdouct
 class Category(models.Model):
@@ -13,7 +34,6 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
         
 
-    
 
 class customer(models.Model):
     first_name=models.CharField(max_length=100)
