@@ -15,7 +15,7 @@ class Profile(models.Model):
     pincode = models.CharField(max_length=200,blank=True)
     country = models.CharField(max_length=200,blank=True)
 
-def create_profile(sender,instsance,created.**kwargs):
+def create_profile(sender,instsance,created,**kwargs):
     if created:
         user_profile =Profile(user=instsance)
         user_profile.save()
