@@ -16,4 +16,4 @@ class ProfileInline(admin.StackedInline):
 class UserAdmi(admin.ModelAdmin):
     model = User
     field =['username','first_name','last_name']
-    case
+    
