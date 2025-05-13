@@ -13,7 +13,13 @@ admin.site.register(Profile)
 class ProfileInline(admin.StackedInline):
     model= Profile
 
-class UserAdmi(admin.ModelAdmin):
+class UserAdmin(admin.ModelAdmin):
     model = User
-    field =['username','first_name','last_name']
+    field =['username','first_name','last_name','email']
+    inlines=[ProfileInline]
     
+#unregiser the old way
+admin.site.unregister(User)
+
+#Reregiser the old way
+admin.site.register(User,UserAdmin)
