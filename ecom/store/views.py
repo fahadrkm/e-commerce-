@@ -1,15 +1,43 @@
 from django.shortcuts import render,redirect
-from . models import Product, Category
+from . models import Product, Category, Profile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from.forms import SignUpForm, UpdateUserForm,ChangePasswordForm
+from.forms import SignUpForm, UpdateUserForm,ChangePasswordForm,UserInfoForm
 from django import forms
 
-def update_info(request):
-      pass
+def search(request):
+      #detemine if they filled out the form
+      if request.method=='POST':
+            searched=request.POST['searched']
+            return render(request,"search.html", {'searched':searched})
+            pass
+      else:
+            return render(request,"search.html", {})
 
+
+def update_info(request):
+	if request.user.is_authenticated:
+		current_user = Profile.objects.get(user__id=request.user.id)
+		form = UserInfoForm(request.POST or None, instance=current_user)
+
+		if form.is_valid():
+			form.save()
+
+			
+			messages.success(request, "Your info has Been Updated!!")
+			return redirect('home')
+		return render(request, "update_info.html", {'form':form})
+	else:
+		messages.success(request, "You Must Be Logged In To Access That Page!!")
+		return redirect('login')
+
+def category_summary(request):
+    categories = Category.objects.all()
+    return render(request, 'category_summary.html',{'categories':categories})
+
+      
 def update_password(request):
 	if request.user.is_authenticated:
 		current_user = request.user
@@ -110,8 +138,8 @@ def register_user(request):
             #login user
             user=authenticate(username=username,password=password)
             login(request,user)
-            messages.success(request,("you have Registered successfully..."))
-            return redirect('home')
+            messages.success(request,("Uer name created .Please fill your info below"))
+            return redirect('update_info')
         else:
             messages.success(request,("there is a problem please try again..."))
             return redirect('register')

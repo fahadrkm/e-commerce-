@@ -1,6 +1,22 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm,SetPasswordForm
 from django import forms
+from django.db import models
+from.models import Profile
+
+class UserInfoForm(forms.ModelForm):
+	phone = forms.CharField(label='',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'phone'}),required=False)
+	address1 = forms.CharField(label='',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'address1'}),required=False)
+	address2 = forms.CharField(label='',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'address2'}),required=False)
+	city = forms.CharField(label='',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'city'}),required=False)
+	state = forms.CharField(label='',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'state'}),required=False)
+	pincode = forms.CharField(label='',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'pincode'}),required=False)
+	country = forms.CharField(label='',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'country'}),required=False)
+
+	class Meta:
+		model= Profile
+		fields=('phone','address1','city','state','pincode','country',)
+
 
 class ChangePasswordForm(SetPasswordForm):
 	class Meta:
