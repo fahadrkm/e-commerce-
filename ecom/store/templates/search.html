@@ -16,7 +16,7 @@
 <center>
     <div class="card" > <!-- Optional: control card width -->
         <div class="card-header">
-            Featured
+            Featured proucts
         </div>
         <div class="card-body">
             <form method="POST" action="{% url 'search' %}">
@@ -34,5 +34,4 @@
 {% if searched %}
 <center> <br> You searched for {{ searched }}  </center> <br>
 {% endif %}
-
 {% endblock %}
