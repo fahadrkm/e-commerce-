@@ -11,6 +11,17 @@ def search(request):
       #detemine if they filled out the form
       if request.method=='POST':
             searched=request.POST['searched']
+            # query the products Db models
+            searched = Product.objects.filter(name__icontains=searched)
+            #test for search
+            if not searched:
+                  messages.success(request, "sorry product does not exit")
+                  return render(request,"search.html",{})
+            else:
+                  return render(request,"search.html", {'searched':searched})
+                  
+
+
             return render(request,"search.html", {'searched':searched})
             pass
       else:
