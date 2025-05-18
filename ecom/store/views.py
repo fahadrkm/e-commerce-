@@ -6,13 +6,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from.forms import SignUpForm, UpdateUserForm,ChangePasswordForm,UserInfoForm
 from django import forms
+from django.db.models import Q
 
 def search(request):
       #detemine if they filled out the form
       if request.method=='POST':
             searched=request.POST['searched']
             # query the products Db models
-            searched = Product.objects.filter(name__icontains=searched)
+            searched = Product.objects.filter(name__icontains=searched | Q(description__icontains=searched))
             #test for search
             if not searched:
                   messages.success(request, "sorry product does not exit")
