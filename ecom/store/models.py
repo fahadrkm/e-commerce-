@@ -14,7 +14,7 @@ class Profile(models.Model):
     state = models.CharField(max_length=200,blank=True)
     pincode = models.CharField(max_length=200,blank=True)
     country = models.CharField(max_length=200,blank=True)
-
+    old_cart= models.CharField(max_length=200,blank=True,null=True)
 def create_profile(sender,instance,created,**kwargs):
     if created:
         user_profile =Profile(user=instance)
