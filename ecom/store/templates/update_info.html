@@ -14,10 +14,14 @@
                         <div class="col-6">
                             <p class="lead fw-normal text-white-50 mb-0">Register your account</p>
                             <br>
+                            <strong>Billing Information</strong>
+                            <br>
                             <form method="POST" action="{% url 'update_info' %}">
                                 {% csrf_token %}
                                 {{ form.as_p }}
                                 <br/> <br>
+                                {{ shipping_form.as_p }}
+                                
                                 <button type="submit" class="btn btn-secondary">
                                     Update Profile
                                 </button>
