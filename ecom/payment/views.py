@@ -6,4 +6,4 @@ def payment_success(request):
 
 
 def checkout(request):
-    return render(request,"payment/checkout.html{}")
+    return render(request,"payment/checkout.html",{})
