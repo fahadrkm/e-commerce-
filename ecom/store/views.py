@@ -27,7 +27,7 @@ def search(request):
                   return render(request,"search.html", {'searched':searched})
                   
             return render(request,"search.html", {'searched':searched})
-            pass
+            
       else:
             return render(request,"search.html", {})
 

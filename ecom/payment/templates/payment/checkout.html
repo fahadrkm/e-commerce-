@@ -23,15 +23,47 @@
                               Order Summary
                             </div>
                             <div class="card-body">
-                              STUFF
+                                {% for product in cart_products %}
+                                    {{ product.name }}:
+                                        {% if product.is_sale %}
+                                            ₹ {{product.sale_price}}
+                                        {% else %}
+                                            ₹ {{ product.price }}
+                                        {% endif %}
+                                        <br>
+                                            Quantity:   
+                                                {% for key, value in quantities.items %}
+                                                    {%if key == product.id|slugify %}
+                                                        {{value}} 
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <br>
+                                                
+                                {% endfor %}
+                                <br>
+                                <strong> Amount: ₹ {{ totals }} </strong>
+                                <br/>
+                                
+                                <center><a href="{% url 'cart_summary' %}" class="btn btn-sm btn-outline-secondary">Update Items</a> </center>
                             </div>
                           </div>
 
                     </div>
-                </div>
+                </div> <br>
+                <div class="card">
+                    <div class="card-header">
+                      Shipping Info
+                    </div>
+                    <div class="card-body">
+                      {{ shipping_form.as_p }}
+                      
+                    </div>
+                  </div>
+                  <a href="" class btn btn-secondary>Continue to billing</a>
             </div>
 
         <br/>  
+        
         
 
 <br/><br/><br/><br/>
