@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+
+{%block content%}
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Process order</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Review</p>
+                </div>
+            </div>
+            <br/>
+
+        </header>
+        
+        <div class="container">
+                <div class="row" >
+                    <div class="col-8">
+                        
+                        <div class="card">
+                            <div class="card-header">
+                              Order Summary
+                            </div>
+                            <div class="card-body">
+                                {% for product in cart_products %}
+                                    {{ product.name }}:
+                                        {% if product.is_sale %}
+                                            ₹ {{product.sale_price}}
+                                        {% else %}
+                                            ₹ {{ product.price }}
+                                        {% endif %}
+                                        <br>
+                                            Quantity:   
+                                                {% for key, value in quantities.items %}
+                                                    {%if key == product.id|slugify %}
+                                                        {{value}} 
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <br>
+                                                
+                                {% endfor %}
+                                <br>
+                                <strong> Amount: ₹ {{ totals }} </strong>
+                                <br/>
+                                
+                                <center><a href="{% url 'cart_summary' %}" class="btn btn-sm btn-outline-secondary">Update Items</a> </center>
+                            </div>
+                          </div>
+
+                    </div>
+                </div> <br>
+                <div class="card">
+                    <div class="card-header">
+                      Shipping Info
+                    </div>
+                    <div class="card-body">
+                          <h6> Name:{{ shipping_info.shipping_fullname }}<br>
+                           Email:{{ shipping_info.shipping_email }}<br>
+                           address 1:{{ shipping_info.shipping_address1 }}<br>
+                           Address 2:{{ shipping_info.shipping_address2 }}<br>
+                           city:{{ shipping_info.shipping_city }}<br>
+                           state:{{ shipping_info.shipping_state }}<br>
+                           pincode:{{ shipping_info.shipping_pincode }}<br>
+                           county:{{ shipping_info.shipping_country }}<br>
+                        </h6><br>
+                        <a href="{% url 'checkout' %}" class="btn btn-outline-secondary">Update Shipping </a>
+                    </div>
+                </div>
+                <br>
+                    <div class="card">
+                    <div class="card-header">
+                        Biling Info
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'process_order' %}">
+                            {% csrf_token %}
+                        {{ billing_form.as_p }}
+                      <button type="submit"  class="btn btn-secondary">proceed payment </button>
+                    </form>
+                    </div>
+
+                  </div>
+                  
+
+                  
+                  
+                
+            </div>
+
+        <br/>  
+        
+        </div>
+        
+        
+        
+
+<br/><br/><br/><br/>
+
+<center>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
+    
+</center>
+<br/><br/><br/>
+
+
+
+{% endblock %}

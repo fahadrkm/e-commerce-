@@ -6,6 +6,14 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from store.models import Product, Profile
 # Create your views here.
+
+def process_order(request):
+    if request.POST:
+        pass
+
+    else:
+        pass
+
 def payment_success(request):
     return render(request,"payment/payment_success.html",{})
 
