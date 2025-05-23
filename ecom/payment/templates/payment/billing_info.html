@@ -7,7 +7,7 @@
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
                     <h1 class="display-4 fw-bolder">Billing info</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Enter your payment</p>
+                    <p class="lead fw-normal text-white-50 mb-0">Review</p>
                 </div>
             </div>
             <br/>
@@ -55,17 +55,40 @@
                       Shipping Info
                     </div>
                     <div class="card-body">
-                        <form method="POST" acion="{% url 'billing_info' %}">
-                            {% csrf_token %}
-                            {{ shipping_form.as_p }}
-                    
+                          <h6> Name:{{ shipping_info.shipping_fullname }}<br>
+                           Email:{{ shipping_info.shipping_email }}<br>
+                           address 1:{{ shipping_info.shipping_address1 }}<br>
+                           Address 2:{{ shipping_info.shipping_address2 }}<br>
+                           city:{{ shipping_info.shipping_city }}<br>
+                           state:{{ shipping_info.shipping_state }}<br>
+                           pincode:{{ shipping_info.shipping_pincode }}<br>
+                           county:{{ shipping_info.shipping_country }}<br>
+                        </h6><br>
+                        <a href="{% url 'checkout' %}" class="btn btn-outline-secondary">Update Shipping </a>
                     </div>
+                </div>
+                <br>
+                    <div class="card">
+                    <div class="card-header">
+                        Biling Info
+                    </div>
+                    <div class="card-body">
+                        {{ billing_form.as_p }}
+                      <a href="{% url 'checkout' %}" class="btn btn-outline-secondary">proceed payment </a>
+                    </div>
+
                   </div>
-                  <a href="" class btn btn-secondary>Pay now</a>
-                </form>
+                  
+
+                  
+                  
+                
             </div>
 
         <br/>  
+        
+        </div>
+        
         
         
 

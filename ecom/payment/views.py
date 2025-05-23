@@ -1,9 +1,10 @@
-from django.shortcuts import render
-from cart.cart import Cart
-from payment.forms import ShippingForm
-from payment.models import ShippingAddress
-from django.contrib import messages
 from django.shortcuts import render, redirect
+from cart.cart import Cart
+from payment.forms import ShippingForm,Payment_Form
+from payment.models import ShippingAddress, Order, OrderItem
+from django.contrib.auth.models import User
+from django.contrib import messages
+from store.models import Product, Profile
 # Create your views here.
 def payment_success(request):
     return render(request,"payment/payment_success.html",{})
@@ -29,16 +30,43 @@ def checkout(request):
 
 def billing_info(request):
     if request.POST:
-        #get cart
-        cart=Cart(request)
-        cart_products = cart.get_prods 
-        quantities = cart.get_quants
+        cart = Cart(request)
+        cart_products = cart.get_prods()
+        quantities = cart.get_quants()
         totals = cart.cart_total()
-        shipping_form = request.POST
-        return render(request,"payment/billing_info.html",{"cart_products":cart_products, 'quantities':quantities,"totals":totals,"shipping_form":shipping_form})
-    else:
-        messages.success(request,"Access Denied")
-        return redirect('home')
+        #check user logged in
+        if request.user.is_authenticated:
+            #get the billing form
+            billing_form=Payment_Form
 
+            return render(request, "payment/billing_info.html", {
+            "cart_products": cart_products,
+            "quantities": quantities,
+            "totals": totals,
+            "shipping_info":request.POST,
+            'billing_form':billing_form,
+        })
+        
+        else:
+            return render(request, "payment/billing_info.html", {
+            "cart_products": cart_products,
+            "quantities": quantities,
+            "totals": totals,
+            "shipping_info":request.POST,
+            'billing_form':billing_form,
+        })
+             
+
+        shipping_form = request.POST  # just pass raw data for now
+
+        return render(request, "payment/billing_info.html", {
+            "cart_products": cart_products,
+            "quantities": quantities,
+            "totals": totals,
+            "shipping_form": shipping_form,
+        })
+    else:
+        messages.error(request, "Access Denied")
+        return redirect('home')
     
     

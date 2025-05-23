@@ -18,3 +18,9 @@ class ShippingForm(forms.ModelForm):
 
         exclude=['user',]
 
+class Payment_Form(forms.Form):
+    card_name=forms.CharField(label='',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Name on card'}),required=True)
+    card_numbe=forms.CharField(label='',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'card number'}),required=True)
+    card_exp_date=forms.CharField(label='',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'card exp. date'}),required=True)
+    card_cvv_number=forms.CharField(label='',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'card cvv'}),required=True)
+

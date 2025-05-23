@@ -1,45 +1,43 @@
-from django.shortcuts import render,redirect
-from . models import Product, Category, Profile
+from django.shortcuts import render, redirect
+from .models import Product, Category, Profile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from.forms import SignUpForm, UpdateUserForm,ChangePasswordForm,UserInfoForm
-from django import forms
-from django.db.models import Q
-import json
-from cart.cart import cart
+from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
+
 from payment.forms import ShippingForm
 from payment.models import ShippingAddress
 
+from django import forms
+from django.db.models import Q
+import json
+from cart.cart import Cart
+
 
 def search(request):
-      #detemine if they filled out the form
-      if request.method=='POST':
-            searched=request.POST['searched']
-            # query the products Db models
-            searched = Product.objects.filter(name__icontains=searched | Q(description__icontains=searched))
-            #test for search
-            if not searched:
-                  messages.success(request, "sorry product does not exit")
-                  return render(request,"search.html",{})
-            else:
-                  return render(request,"search.html", {'searched':searched})
-                  
-            return render(request,"search.html", {'searched':searched})
-            
-      else:
-            return render(request,"search.html", {})
+	# Determine if they filled out the form
+	if request.method == "POST":
+		searched = request.POST['searched']
+		# Query The Products DB Model
+		searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
+		# Test for null
+		if not searched:
+			messages.success(request, "That Product Does Not Exist...Please try Again.")
+			return render(request, "search.html", {})
+		else:
+			return render(request, "search.html", {'searched':searched})
+	else:
+		return render(request, "search.html", {})	
+
 
 def update_info(request):
 	if request.user.is_authenticated:
 		# Get Current User
 		current_user = Profile.objects.get(user__id=request.user.id)
-        
 		# Get Current User's Shipping Info
-		#shipping_user = ShippingAddress.objects.get(user__id=request.user.id)
-		shipping_user, created = ShippingAddress.objects.get_or_create(user=request.user)
-
+		shipping_user = ShippingAddress.objects.get(user__id=request.user.id)
+		
 		# Get original User Form
 		form = UserInfoForm(request.POST or None, instance=current_user)
 		# Get User's Shipping Form
@@ -58,11 +56,7 @@ def update_info(request):
 		return redirect('home')
 
 
-def category_summary(request):
-    categories = Category.objects.all()
-    return render(request, 'category_summary.html',{'categories':categories})
 
-      
 def update_password(request):
 	if request.user.is_authenticated:
 		current_user = request.user
@@ -85,7 +79,6 @@ def update_password(request):
 	else:
 		messages.success(request, "You Must Be Logged In To View That Page...")
 		return redirect('home')
-
 def update_user(request):
 	if request.user.is_authenticated:
 		current_user = User.objects.get(id=request.user.id)
@@ -102,91 +95,93 @@ def update_user(request):
 		messages.success(request, "You Must Be Logged In To Access That Page!!")
 		return redirect('home')
 
+
 def category_summary(request):
-    categories = Category.objects.all()
-    return render(request, 'category_summary.html',{'categories':categories})
+	categories = Category.objects.all()
+	return render(request, 'category_summary.html', {"categories":categories})	
 
 def category(request, foo):
-    foo = foo.replace('-', ' ')  # Replace hyphens with spaces
-    try:
-        category = Category.objects.get(name__iexact=foo)  # Case-insensitive lookup for category name
-        products = Product.objects.filter(Category=category)  # Match the field name "Category"
-        return render(request, 'category.html', {'products': products, 'category': category.name})
-    except Category.DoesNotExist:
-        messages.error(request, "That category doesn't exist.")
-        return redirect('home')
-
-
+	# Replace Hyphens with Spaces
+	foo = foo.replace('-', ' ')
+	# Grab the category from the url
+	try:
+		# Look Up The Category
+		category = Category.objects.get(name=foo)
+		products = Product.objects.filter(category=category)
+		return render(request, 'category.html', {'products':products, 'category':category})
+	except:
+		messages.success(request, ("That Category Doesn't Exist..."))
+		return redirect('home')
 
 
 def product(request,pk):
-    product= Product.objects.get(id=pk)
-    return render(request,'product.html', {'product':product})
+	product = Product.objects.get(id=pk)
+	return render(request, 'product.html', {'product':product})
 
 
 def home(request):
-    products = Product.objects.all()
-    return render (request, 'home.html',{'products' : products})
- 
+	products = Product.objects.all()
+	return render(request, 'home.html', {'products':products})
+
 
 def about(request):
-    return render(request, 'about.html',{})
+	return render(request, 'about.html', {})	
 
 def login_user(request):
-    if request.method=="POST":
-        username=request.POST['username']
-        password=request.POST['password']
-        user=authenticate(request,username=username,password=password)
-        if user is not None:
-            login(request,user)
-            #shop stuff
-            current_user=Profile.objects.get(user__id=request.user.id)
-            #get thier saved part
-            saved_cart = current_user.old_cart
-            #converet db string into dic
-            if saved_cart:
-                  #convert to dic using json
-                  converted_cart=json.load(saved_cart)
-                  #add loaded cart into session
-                  #get the cart
-                  cart=cart(request)
-                  #loop through the cart add the items to the database
-                  for key,value in converted_cart.items():
-                        cart.db_add(product=key,quantity=value)
+	if request.method == "POST":
+		username = request.POST['username']
+		password = request.POST['password']
+		user = authenticate(request, username=username, password=password)
+		if user is not None:
+			login(request, user)
 
+			# Do some shopping cart stuff
+			current_user = Profile.objects.get(user__id=request.user.id)
+			# Get their saved cart from database
+			saved_cart = current_user.old_cart
+			# Convert database string to python dictionary
+			if saved_cart:
+				# Convert to dictionary using JSON
+				converted_cart = json.loads(saved_cart)
+				# Add the loaded cart dictionary to our session
+				# Get the cart
+				cart = Cart(request)
+				# Loop thru the cart and add the items from the database
+				for key,value in converted_cart.items():
+					cart.db_add(product=key, quantity=value)
 
+			messages.success(request, ("You Have Been Logged In!"))
+			return redirect('home')
+		else:
+			messages.success(request, ("There was an error, please try again..."))
+			return redirect('login')
 
-            messages.success(request,("you have logged in successfull..."))
-            return redirect('home')
-        else:
-            messages.success(request,("There is an error. Pleasse try again..."))
-            return redirect('login')
-    else:
-        return render (request,'login.html',{})
+	else:
+		return render(request, 'login.html', {})
+
 
 def logout_user(request):
-    logout(request)
-    messages.success(request,("you have been logged out..."))
-    return redirect('home')
+	logout(request)
+	messages.success(request, ("You have been logged out...Thanks for stopping by..."))
+	return redirect('home')
+
+
 
 def register_user(request):
-    form = SignUpForm()
-    if request.method == "POST":
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username=form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            #login user
-            user=authenticate(username=username,password=password)
-            login(request,user)
-            messages.success(request,("Uer name created .Please fill your info below"))
-            return redirect('update_info')
-        else:
-            messages.success(request,("there is a problem please try again..."))
-            return redirect('register')
-    else:
-        return render(request,'register.html',{'form':form})
-
-
-    
+	form = SignUpForm()
+	if request.method == "POST":
+		form = SignUpForm(request.POST)
+		if form.is_valid():
+			form.save()
+			username = form.cleaned_data['username']
+			password = form.cleaned_data['password1']
+			# log in user
+			user = authenticate(username=username, password=password)
+			login(request, user)
+			messages.success(request, ("Username Created - Please Fill Out Your User Info Below..."))
+			return redirect('update_info')
+		else:
+			messages.success(request, ("Whoops! There was a problem Registering, please try again..."))
+			return redirect('register')
+	else:
+		return render(request, 'register.html', {'form':form})
