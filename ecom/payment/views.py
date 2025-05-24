@@ -40,7 +40,7 @@ def process_order(request):
             #get product info
             for product in cart_products():
                 #get product id
-                Product_id =product.id
+                product_id =product.id
                 #get product price
                 if product.is_sale:
                     price=product.sale_price
@@ -50,15 +50,49 @@ def process_order(request):
                 for key,value in quantities().items():
                     if int(key) ==product.id:
                         #create order items
-                        create_order_item=OrderItem(orde_idr=order_id,product_id=product_id,user_id=user,quantity=value,price=price)
+                        create_order_item=OrderItem(order_id=order_id,product_id=product_id,user_id=user.id,quantity=value,price=price)
                         create_order_item.save()
-                        
+            #delete our cart after checkout
+            for key in list(request.session.keys()):
+                if key=='session_key':
+                    #delete session key of cart
+                    del request.session[key]
+
+
             messages.error(request, "order placed")
             return redirect('home')
         else:
             #not logged in
             create_order = Order(user=user,full_name=full_name,email=email,shipping_address=shipping_address,amount_paid=amount_paid)
             create_order.save()
+            # Add order items
+			
+			# Get the order ID
+            order_id = create_order.pk
+			
+			# Get product Info
+            for product in cart_products():
+                        
+				# Get product ID
+                product_id = product.id
+				# Get product price
+                if product.is_sale:
+                    price = product.sale_price
+                else:
+                    price = product.price
+
+				# Get quantity
+                for key,value in quantities().items():
+                    if int(key) == product.id:
+						# Create order item
+                        create_order_item = OrderItem(order_id=order_id, product_id=product_id, quantity=value, price=price)
+                        create_order_item.save()
+
+			# Delete our cart
+            for key in list(request.session.keys()):
+                if key == "session_key":
+					# Delete the key
+                    del request.session[key]
             messages.error(request, "order placed")
             return redirect('home')
         
