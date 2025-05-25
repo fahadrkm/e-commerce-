@@ -54,6 +54,8 @@ def set_shipped_date(sender,instance,**kwargs):
         if instance.shipped and not obj.shipped:
             instance.date_shipped =now
 
+
+
 #order item model
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,on_delete=models.CASCADE,null=True,)
