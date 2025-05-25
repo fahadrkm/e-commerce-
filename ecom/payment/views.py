@@ -7,11 +7,18 @@ from django.contrib import messages
 from store.models import Product, Profile
 # Create your views here.
 
-def not_shipped_dash():
-    pass
+def not_shipped_dash(request):
+    return render(request, "payment/not_shipped_dash.html", {})
 
-def not_shipped_dash():
-    pass
+    messages.success(request,'order placed')
+    return redirect('home')
+    
+
+def not_shipped_dash(request):
+    return render(request, "payment/shipped_dash.html", {})
+    messages.success(request,'order placed')
+    return redirect('home')
+    
 
 
 def process_order(request):
@@ -66,8 +73,8 @@ def process_order(request):
                     del request.session[key]
 
 
-            messages.error(request, "order placed")
-            return redirect('home')
+            )
+            return redirect('messages.success(request, "order placed"home')
         else:
             #not logged in
             create_order = Order(user=user,full_name=full_name,email=email,shipping_address=shipping_address,amount_paid=amount_paid)
