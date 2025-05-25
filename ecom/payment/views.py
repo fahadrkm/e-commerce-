@@ -8,10 +8,13 @@ from store.models import Product, Profile
 # Create your views here.
 
 def not_shipped_dash(request):
-    return render(request, "payment/not_shipped_dash.html", {})
+    if request.user.is_authenticated and request.user.is_superuser:
 
-    messages.success(request,'order placed')
-    return redirect('home')
+        return render(request, "payment/not_shipped_dash.html", {})
+    else:
+
+        messages.success(request,'Access denied')
+        return redirect('home')
     
 
 def not_shipped_dash(request):
