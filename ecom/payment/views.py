@@ -17,7 +17,7 @@ def not_shipped_dash(request):
         return redirect('home')
     
 
-def not_shipped_dash(request):
+def shipped_dash(request):
     if request.user.is_authenticated and request.user.is_superuser:
 
         return render(request, "payment/shipped_dash.html", {})
@@ -79,7 +79,7 @@ def process_order(request):
                     del request.session[key]
 
 
-            )
+            
             return redirect('messages.success(request, "order placed"home')
         else:
             #not logged in
