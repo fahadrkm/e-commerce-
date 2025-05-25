@@ -7,6 +7,13 @@ from django.contrib import messages
 from store.models import Product, Profile
 # Create your views here.
 
+def not_shipped_dash():
+    pass
+
+def not_shipped_dash():
+    pass
+
+
 def process_order(request):
     if request.POST:
         cart=Cart(request)
