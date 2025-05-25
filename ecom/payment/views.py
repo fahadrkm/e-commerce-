@@ -18,10 +18,13 @@ def not_shipped_dash(request):
     
 
 def not_shipped_dash(request):
-    return render(request, "payment/shipped_dash.html", {})
-    messages.success(request,'order placed')
-    return redirect('home')
-    
+    if request.user.is_authenticated and request.user.is_superuser:
+
+        return render(request, "payment/shipped_dash.html", {})
+    else:
+
+        messages.success(request,'Access denied')
+        return redirect('home')
 
 
 def process_order(request):
