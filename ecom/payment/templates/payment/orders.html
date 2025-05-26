@@ -19,7 +19,7 @@
                            {% if order.date_shipped %}
                                 Date shipped: {{ order.date_shipped}}
                             {% else %}
-                                Date Ordered: {{% order.date_ordered %}}
+                                Date Ordered: {{ order.date_ordered }}
                             {% endif %}
                            <br>
                            Full Name:{{ order.full_name }}
@@ -29,12 +29,10 @@
 
                                 {% for item in items %}
                                     {{ item.product }} -{{ item.quantity }} {{ item.product }}  -₹{{ item.price }} <br/>
-
+                                {% endfor%}
                         </div>
                     </div>
-                    <a href="{% url %}" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </center>
+                    
             
         </div>
     </div>

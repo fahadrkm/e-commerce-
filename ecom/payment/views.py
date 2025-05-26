@@ -11,7 +11,7 @@ def orders(request,pk):
     if request.user.is_authenticated and request.user.is_superuser:
 
         order=Order.objects.get(id=pk)
-        items =OrderItem.objects.filter(Order=pk)
+        items =OrderItem.objects.filter(order=pk)
         
 
         return render(request, "payment/orders.html",{"order":order,"items":items})
