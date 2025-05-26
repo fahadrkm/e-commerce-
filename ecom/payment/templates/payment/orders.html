@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+ <!-- Header-->
+ 
+    <div class="container ">
+        <div class="row">
+            <center>
+                <div class="col-8">
+                    <br>
+                    <div class="card">
+                        <div class="card-header">
+                            {{ order.id }} - ₹{{ order.amount_paid}}
+                        </div>
+                        <div class="card-body">
+                           Email:
+                           Date shipped:
+                           Date Ordered:
+                           <br>
+                           Full Name:
+                           Shipping Address :
+                            
+                        </div>
+                    </div>
+                    <a href="{% url %}" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </center>
+            
+        </div>
+    </div>
+
+
+{% endblock %}

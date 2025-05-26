@@ -7,9 +7,20 @@ from django.contrib import messages
 from store.models import Product, Profile
 # Create your views here.
 
-def orders(request):
-    pass
+def orders(request,pk):
+    if request.user.is_authenticated and request.user.is_superuser:
 
+        order=Order.objects.get(id=pk)
+        items =OrderItem.objects.filter(Order=pk)
+        
+
+        return render(request, "payment/orders.html",{"order":order,"items":items})
+    else:
+        messages.success(request,'Access denied')
+        return redirect('home')
+
+    
+    
 def not_shipped_dash(request):
     if request.user.is_authenticated and request.user.is_superuser:
         orders =Order.objects.filter(shipped=False)
