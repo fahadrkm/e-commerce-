@@ -5,6 +5,7 @@ from payment.models import ShippingAddress, Order, OrderItem
 from django.contrib.auth.models import User
 from django.contrib import messages
 from store.models import Product, Profile
+import datetime
 # Create your views here.
 
 def orders(request,pk):
@@ -12,9 +13,25 @@ def orders(request,pk):
 
         order=Order.objects.get(id=pk)
         items =OrderItem.objects.filter(order=pk)
-        
-
+        if request.POST:
+            status=request.POST['shipping_status']
+            #chek if true or falsw
+            if status =='true':
+                #get vorder
+                order =Order.objects.filter(id=pk)
+                #update status
+                now =datetime.datetime.now()
+                order.update(shipped=True,date_shipped=now)
+            else:
+                #get vorder
+                order =Order.objects.filter(id=pk)
+                #update status
+                order.update(shipped=False)
+        messages.success(request,"Shipping Status Updated")
+        return redirect('home')
+    
         return render(request, "payment/orders.html",{"order":order,"items":items})
+        
     else:
         messages.success(request,'Access denied')
         return redirect('home')
@@ -24,6 +41,16 @@ def orders(request,pk):
 def not_shipped_dash(request):
     if request.user.is_authenticated and request.user.is_superuser:
         orders =Order.objects.filter(shipped=False)
+        if request.POST:
+            status=request.POST['shipping_status']
+            num =request.POST['num']
+            order=Order.objects.filter(id=num)
+            now =datetime.datetime.now()
+            order.update(shipped=True,date_shipped=now)
+        messages.success(request,"Shipping Status Updated")
+        return redirect('home')
+
+        
 
         return render(request, "payment/not_shipped_dash.html", {'orders':orders})
     else:
@@ -35,6 +62,14 @@ def not_shipped_dash(request):
 def shipped_dash(request):
     if request.user.is_authenticated and request.user.is_superuser:
         orders =Order.objects.filter(shipped=True)
+        if request.POST:
+            status=request.POST['shipping_status']
+            num =request.POST['num']
+            order=Order.objects.filter(id=num)
+            now =datetime.datetime.now()
+            order.update(shipped=False)
+        messages.success(request,"Shipping Status Updated")
+        return redirect('home')
 
         return render(request, "payment/shipped_dash.html", {'orders':orders})
     else:
