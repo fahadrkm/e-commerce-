@@ -15,13 +15,21 @@
                             {{ order.id }} - ₹{{ order.amount_paid}}
                         </div>
                         <div class="card-body">
-                           Email:
-                           Date shipped:
-                           Date Ordered:
+                           Email:{{ ordered.email}}
+                           {% if order.date_shipped %}
+                                Date shipped: {{ order.date_shipped}}
+                            {% else %}
+                                Date Ordered: {{% order.date_ordered %}}
+                            {% endif %}
                            <br>
-                           Full Name:
-                           Shipping Address :
-                            
+                           Full Name:{{ order.full_name }}
+                            <pre>
+                                Shipping Address : {{ order.shipping_address }}
+                            </pre>
+
+                                {% for item in items %}
+                                    {{ item.product }} -{{ item.quantity }} {{ item.product }}  -₹{{ item.price }} <br/>
+
                         </div>
                     </div>
                     <a href="{% url %}" class="btn btn-primary">Go somewhere</a>
