@@ -133,7 +133,10 @@ def process_order(request):
                 if key=='session_key':
                     #delete session key of cart
                     del request.session[key]
-
+            # delete cart from database(old cart field)
+            current_user=Profile.filter(user__id=request.user.id)
+            #delete shopping cart in database(old_cart field)
+            current_user.update(old_cart="")
 
             
             return redirect('messages.success(request, "order placed"home')
