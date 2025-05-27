@@ -134,12 +134,12 @@ def process_order(request):
                     #delete session key of cart
                     del request.session[key]
             # delete cart from database(old cart field)
-            current_user=Profile.filter(user__id=request.user.id)
+            current_user=Profile.objects.filter(user__id=request.user.id)
             #delete shopping cart in database(old_cart field)
             current_user.update(old_cart="")
 
-            
-            return redirect('messages.success(request, "order placed"home')
+            messages.success(request, "order placed")
+            return redirect('home')
         else:
             #not logged in
             create_order = Order(user=user,full_name=full_name,email=email,shipping_address=shipping_address,amount_paid=amount_paid)
